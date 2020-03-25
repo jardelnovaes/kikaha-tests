@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>kikaha-test.maven-plugin</groupId>
+		<artifactId>test-parent</artifactId>
+		<version>1.0.0-SNAPSHOT</version>
+	</parent>
+
+	<artifactId>test-app</artifactId>
+	<packaging>jar</packaging>
+
+	<properties>
+		<config.plugins.jar.enabled>true</config.plugins.jar.enabled>
+		<codeploy.testapp.enabled>true</codeploy.testapp.enabled>
+	</properties>
+
+	<dependencies>
+        <dependency>
+            <groupId>kikaha-test.maven-plugin</groupId>
+            <artifactId>test-core</artifactId>
+        </dependency>
+		<dependency>
+			<groupId>io.skullabs.kikaha</groupId>
+			<artifactId>kikaha-urouting</artifactId>
+		</dependency>
+        <dependency>
+            <groupId>io.skullabs.kikaha</groupId>
+            <artifactId>kikaha-core</artifactId>
+        </dependency>
+		<dependency>
+			<groupId>io.skullabs.kikaha</groupId>
+			<artifactId>kikaha-mustache</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>io.skullabs.kikaha</groupId>
+			<artifactId>kikaha-cloud-aws-ec2</artifactId>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>io.skullabs.kikaha</groupId>
+				<artifactId>kikaha-maven-plugin</artifactId>
+				<configuration>
+					<jvmArgs>
+						-Dfile.encoding=UTF-8
+						-Dserver.http.port=8001
+						-Dkikaha-test.maven-plugin.host=http://localhost:8001
+                        -Dserver.metrics.enabled=false
+						-Dserver.smart-server.identification=kikaha.cloud.smart.DefaultMachineIdentification
+						-Dserver.aws.ec2.tag-as-config-enabled=false
+						-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=8002
+					</jvmArgs>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+	<profiles>
+		<profile>
+			<id>package</id>
+			<properties>
+				<!-- generate runnable jar -->
+				<config.plugins.jar.enabled>true</config.plugins.jar.enabled>
+			</properties>
+		</profile>
+		<!-- perfil para efetuar deploy via CodeDeploy -->
+		<profile>
+			<id>deploy-to-code-deploy</id>
+			<properties>
+				<!-- generate runnable jar -->
+				<config.plugins.jar.enabled>true</config.plugins.jar.enabled>
+				<!-- configure S3 deployment -->
+				<config.plugins.aws.s3.enabled>${codeploy.testapp.enabled}</config.plugins.aws.s3.enabled>
+				<config.plugins.aws.s3.bucket>kikaha-test-deployments</config.plugins.aws.s3.bucket>
+				<config.plugins.aws.s3.region>sa-east-1</config.plugins.aws.s3.region>
+				<!-- notificar CodeDeploy da nova versão -->
+				<config.plugins.aws.s3.codeDeployFolder>${project.basedir}/package-codedeploy/</config.plugins.aws.s3.codeDeployFolder>
+				<config.plugins.aws.s3.useCodeDeploy>${codeploy.testapp.enabled}</config.plugins.aws.s3.useCodeDeploy>
+				<config.plugins.aws.s3.codeDeployApplicationName>kikaha-app-test</config.plugins.aws.s3.codeDeployApplicationName>
+				<config.plugins.aws.s3.codeDeployDeploymentGroupName>kikaha-app-group</config.plugins.aws.s3.codeDeployDeploymentGroupName>
+			</properties>
+		</profile>
+	</profiles>
+
+</project>

@@ -1,0 +1,57 @@
+server:
+
+  # Configure how server should behave on production.
+  smart-server:
+
+    # Application identification
+    application:
+      name: "kikaha-test.maven-plugin"
+      version: "1.0.0"
+
+    # Machine identification by InstanceId
+    identification: "kikaha.cloud.aws.ec2.AmazonEC2MachineIdentification"
+
+  smart-routes:
+    # Deploy built-in route for logout
+    auth: { logout-url-enabled: true, logout-http-method: "POST" }
+
+  # Authentication configuration
+  auth:
+    endpoints:
+      permission-denied-page: "/forbidden?previousPage={current-page}"
+      logout-url: "/api/me/logout"
+
+    default-excluded-patterns: ["/includes/*", "/views/*", "/favicon.ico", "/api/bureaux", "/api/system/before-stop", "/api/system/info"]
+
+  # Configure Caffeine caches
+  cache:
+    process-result: { maximum-size: 20 }
+
+  # Enable serving static files.
+  static: { enabled: true }
+
+  # Enable internal metrics analysis
+  metrics:
+    enabled: true
+
+    # Metrics for web transactions
+    web-transactions:
+      store-individual-metrics: false
+      store-summarized-metrics: false
+
+    # Metrics for JVM
+    jvm:
+      memory-usage: true
+      buffer-pool-usage: false
+      thread-usage: false
+      gc-usage: false
+      fd-usage: false
+
+  aws:
+    default: { region: "sa-east-1" }
+
+    # Use EC2 Instance Tags as configuration entry points
+    ec2: { tag-as-config-enabled: true }
+
+  uworkers:
+    run-process: { parallelism: 100 }

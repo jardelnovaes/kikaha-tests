@@ -1,0 +1,22 @@
+version: 0.0
+os: linux
+
+# files that should be deployed
+files:
+  - source: /
+    destination: /opt/application/
+
+# mandatory hooks
+hooks:
+  BeforeInstall:
+    - location: stop.sh
+      timeout: 305
+  ApplicationStart:
+    - location: start.sh
+      timeout: 120
+  ValidateService:
+    - location: validate.sh
+      timeout: 60
+  BeforeBlockTraffic:
+    - location: before-block-traffic.sh
+      timeout: 10

@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>kikaha-test.maven-plugin</groupId>
+		<artifactId>test-parent</artifactId>
+		<version>1.0.0-SNAPSHOT</version>
+	</parent>
+
+	<artifactId>test-core</artifactId>
+	<packaging>jar</packaging>
+
+
+    <properties>
+		<version.caffeine>2.6.1</version.caffeine>
+    </properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>io.skullabs.kikaha</groupId>
+			<artifactId>kikaha-core</artifactId>
+		</dependency>
+        <dependency>
+            <groupId>io.skullabs.kikaha</groupId>
+            <artifactId>kikaha-urouting</artifactId>
+        </dependency>
+		<dependency>
+			<groupId>io.skullabs.kikaha</groupId>
+			<artifactId>kikaha-jackson</artifactId>
+		</dependency>
+        <!-- Caffeine cache -->
+        <dependency>
+            <groupId>io.skullabs.kikaha</groupId>
+            <artifactId>kikaha-caffeine</artifactId>
+        </dependency>
+		<dependency>
+			<groupId>io.skullabs.kikaha</groupId>
+			<artifactId>kikaha-cloud-aws-iam</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.amazonaws</groupId>
+			<artifactId>aws-java-sdk-s3</artifactId>
+			<version>${version.aws}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.amazonaws</groupId>
+			<artifactId>aws-java-sdk-core</artifactId>
+			<version>${version.aws}</version>
+		</dependency>
+        <dependency>
+            <groupId>io.skullabs.kikaha</groupId>
+            <artifactId>kikaha-jdbi3</artifactId>
+            <scope>provided</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>io.skullabs.kikaha</groupId>
+                    <artifactId>kikaha-injection</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+		<!-- Logging -->
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-classic</artifactId>
+		</dependency>
+        <!-- MVEL -->
+        <dependency>
+            <groupId>org.mvel</groupId>
+            <artifactId>mvel2</artifactId>
+            <version>2.3.1.Final</version>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>provided</scope>
+        </dependency>
+	</dependencies>
+</project>

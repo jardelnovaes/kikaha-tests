@@ -1,0 +1,22 @@
+version: 0.2
+
+env:
+  parameter-store:
+    AWS_ACCESS_KEY_ID: "/codebuild/awsAccessKeyId"
+    AWS_SECRET_ACCESS_KEY: "/codebuild/awsSecretAccessKeyId"
+
+phases:
+  install:
+    commands:
+       - sudo apt-get -y update
+       - sudo apt-get -y install mysql-server-5.6
+    runtime-versions:
+      java: openjdk8
+  pre_build:
+    commands:
+      - sudo service mysql start
+
+  build:
+    commands:
+      - mvn -U -V -B -Dconfig.skip.tests.integration=true clean test
+      - mvn clean deploy -B -Dconfig.skip.tests=true -P deploy-to-code-deploy

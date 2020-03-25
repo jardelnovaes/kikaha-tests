@@ -1,0 +1,18 @@
+server:
+
+  # Health Check configuration
+  health-check: { enabled: true, url: "/api/health-check" }
+
+  # Authentication configuration
+  auth:
+    # Will never try to authenticate these URLs
+    default-excluded-patterns: [ "/assets/*", "/*.css", "/api/health-check" ]
+
+  # Enable serving static files.
+  static: { enabled: true }
+
+  # Configuring the REST API defaults
+  urouting: { default-content-type: "application/json" }
+
+  aws:
+    s3: { region: "sa-east-1" }
