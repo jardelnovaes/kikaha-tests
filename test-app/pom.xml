@@ -49,7 +49,7 @@
 						-Dfile.encoding=UTF-8
 						-Dserver.http.port=8001
 						-Dkikaha-test.maven-plugin.host=http://localhost:8001
-                        -Dserver.metrics.enabled=false
+						-Dserver.metrics.enabled=false
 						-Dserver.smart-server.identification=kikaha.cloud.smart.DefaultMachineIdentification
 						-Dserver.aws.ec2.tag-as-config-enabled=false
 						-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=8002
@@ -61,19 +61,9 @@
 
 	<profiles>
 		<profile>
-			<id>package</id>
-			<properties>
-				<!-- generate runnable jar -->
-				<config.plugins.jar.enabled>true</config.plugins.jar.enabled>
-			</properties>
-		</profile>
-		<!-- perfil para efetuar deploy via CodeDeploy -->
-		<profile>
 			<id>deploy-to-code-deploy</id>
 			<properties>
-				<!-- generate runnable jar -->
 				<config.plugins.jar.enabled>true</config.plugins.jar.enabled>
-				<!-- configure S3 deployment -->
 				<config.plugins.aws.s3.enabled>${codeploy.testapp.enabled}</config.plugins.aws.s3.enabled>
 				<config.plugins.aws.s3.bucket>kikaha-test-deployments</config.plugins.aws.s3.bucket>
 				<config.plugins.aws.s3.region>sa-east-1</config.plugins.aws.s3.region>
@@ -83,6 +73,46 @@
 				<config.plugins.aws.s3.codeDeployApplicationName>kikaha-app-test</config.plugins.aws.s3.codeDeployApplicationName>
 				<config.plugins.aws.s3.codeDeployDeploymentGroupName>kikaha-app-group</config.plugins.aws.s3.codeDeployDeploymentGroupName>
 			</properties>
+		</profile>
+		<profile>
+			<id>use-sonatype-stagging-deploy-to-code-deploy</id>
+			<properties>
+				<stagging-id>ioskullabs-1210</stagging-id>
+				<config.plugins.jar.enabled>true</config.plugins.jar.enabled>
+				<config.plugins.aws.s3.enabled>${codeploy.testapp.enabled}</config.plugins.aws.s3.enabled>
+				<config.plugins.aws.s3.bucket>kikaha-test-deployments</config.plugins.aws.s3.bucket>
+				<config.plugins.aws.s3.region>sa-east-1</config.plugins.aws.s3.region>
+				<!-- notificar CodeDeploy da nova versão -->
+				<config.plugins.aws.s3.codeDeployFolder>${project.basedir}/package-codedeploy/</config.plugins.aws.s3.codeDeployFolder>
+				<config.plugins.aws.s3.useCodeDeploy>${codeploy.testapp.enabled}</config.plugins.aws.s3.useCodeDeploy>
+				<config.plugins.aws.s3.codeDeployApplicationName>kikaha-app-test</config.plugins.aws.s3.codeDeployApplicationName>
+				<config.plugins.aws.s3.codeDeployDeploymentGroupName>kikaha-app-group</config.plugins.aws.s3.codeDeployDeploymentGroupName>
+			</properties>
+			<repositories>
+				<repository>
+				  <id>oss.sonatype.org</id>
+				  <url>https://oss.sonatype.org/service/local/repositories/${stagging-id}/content/</url>		  
+				  <releases>
+					<enabled>true</enabled>
+				  </releases>
+				  <snapshots>
+					<enabled>false</enabled>
+				  </snapshots>
+				</repository>  
+			</repositories>
+			 <pluginRepositories>
+				<pluginRepository>
+					<id>oss.sonatype.org-plugin</id>
+					<name>oss.sonatype.org-plugin</name>
+					<url>https://oss.sonatype.org/service/local/repositories/${stagging-id}/content/</url>
+					<releases>
+						<enabled>true</enabled>
+					</releases>
+					<snapshots>
+						<enabled>false</enabled>
+					</snapshots>
+				</pluginRepository>
+			</pluginRepositories>
 		</profile>
 	</profiles>
 
